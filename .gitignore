@@ -1,4 +1,6 @@
+*
+!.gitignore
 !MySQLWrapper.py
 !sqliteDB.py
-!requirement.txt
+!requirements.txt
 !README.md
