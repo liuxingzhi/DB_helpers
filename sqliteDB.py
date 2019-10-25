@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 class SqliteDB:
     __pool = None
 
-    def __init__(self, db_name: str = "school.sqlite3") -> None:
+    def __init__(self, db_name: str = "punch.sqlite3") -> None:
         self._connection = SqliteDB.get_conn(db_name)
         self.cursor = self._connection.cursor()
 
@@ -224,14 +224,17 @@ class SqliteDB:
         self._connection.commit()
 
     def release(self) -> None:
-        if hasattr(self, 'cursor'):
+        if hasattr(self, 'cursor') and self.cursor:
             self.cursor.close()
-        if hasattr(self, '_conn'):
+            self.cursor = None
+            print("Released cursor")
+        if hasattr(self, '_connection') and self._connection:
             self._connection.close()
-        print("db resources has released.")
+            self._connection = None
+            print("Release connection")
 
-    def execute(self, sql: str, params=None, multi=False) -> None:
-        if multi:
+    def execute(self, sql: str, params=None, multi=False, raw_query=False) -> None:
+        if multi or raw_query:
             self.cursor.executescript(sql)
         else:
             self.cursor.execute(sql, params)
@@ -246,8 +249,8 @@ class SqliteDB:
         self.release()
         # print(exc_type,exc_val,exc_tb)
 
-    # def __del__(self):
-    #     self.release()
+    def __del__(self):
+        self.release()
 
 
 if __name__ == '__main__':
@@ -262,5 +265,6 @@ if __name__ == '__main__':
             INSERT INTO MYTEST(ID, CONTENT) VALUES (1, "TESTING");
             SELECT * FROM MYTEST;"""
     r = db2.execute(sql, multi=True)
+    db2.release()
     # db2.commit()
     print(r)

@@ -32,7 +32,8 @@ class MySQLWrapper:
         return sqlite.connection
         """
         if MySQLWrapper.__pool is None:
-            MySQLWrapper.__pool = PooledDB(creator=mysql.connector, mincached=1, maxcached=5, host=host, port=port, user=user,
+            MySQLWrapper.__pool = PooledDB(creator=mysql.connector, mincached=1, maxcached=5, host=host, port=port,
+                                           user=user,
                                            password=password, database=db_name, charset='utf8')
         return MySQLWrapper.__pool.connection()
 
@@ -235,11 +236,14 @@ class MySQLWrapper:
         self._connection.commit()
 
     def release(self) -> None:
-        if hasattr(self, 'cursor'):
+        if hasattr(self, 'cursor') and self.cursor:
             self.cursor.close()
-        if hasattr(self, '_conn'):
+            self.cursor = None
+            print("Released cursor")
+        if hasattr(self, '_connection') and self._connection:
             self._connection.close()
-        print("db resources has released.")
+            self._connection = None
+            print("Release connection")
 
     def execute(self, sql: str, params=None, multi=False) -> None:
         if multi:
@@ -264,8 +268,8 @@ class MySQLWrapper:
         self.release()
         # print(exc_type,exc_val,exc_tb)
 
-    # def __del__(self):
-    #     self.release()
+    def __del__(self):
+        self.release()
 
 
 if __name__ == '__main__':
