@@ -231,7 +231,7 @@ class SqliteDB:
         if hasattr(self, '_connection') and self._connection:
             self._connection.close()
             self._connection = None
-            print("Release connection")
+            print("Released connection")
 
     def execute(self, sql: str, params=None, multi=False, raw_query=False) -> None:
         if multi or raw_query:

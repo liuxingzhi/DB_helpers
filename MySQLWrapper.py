@@ -243,7 +243,7 @@ class MySQLWrapper:
         if hasattr(self, '_connection') and self._connection:
             self._connection.close()
             self._connection = None
-            print("Release connection")
+            print("Released connection")
 
     def execute(self, sql: str, params=None, multi=False) -> None:
         if multi:
