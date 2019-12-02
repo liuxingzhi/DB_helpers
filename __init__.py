@@ -1,2 +1,2 @@
-from MySQLWrapper import MySQLWrapper
-from sqliteDB import SqliteDB
+from .MySQLWrapper import MySQLWrapper
+from .sqliteDB import SqliteDB
