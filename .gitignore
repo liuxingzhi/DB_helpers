@@ -1,5 +1,6 @@
 *
 !.gitignore
+!__init__.py
 !MySQLWrapper.py
 !sqliteDB.py
 !requirements.txt
