@@ -84,7 +84,7 @@ class SqliteDB:
         """return table headers"""
         if "limit" not in sql:
             sql += " limit 0"
-        if len(params) > 0:
+        if not params or len(params) > 0:
             self.cursor.execute(sql, params)
         else:
             self.cursor.execute(sql)
